@@ -1,0 +1,45 @@
+<apex:component controller="EnhancedSelectController" allowDML="true" access="global" >
+
+    <script type="text/javascript" src="{!$Resource.JQSelectMenu}"></script>
+    <apex:stylesheet value="{!$Resource.JQSelectMenuCSS}"/>
+    
+      <apex:attribute name="pageController" 
+          type="PageControllerBase" 
+          assignTo="{!pageController}" 
+          required="true" 
+          access="global"
+          description="The controller for the page." />
+          
+    <apex:attribute name="object" access="global" description="This is the object" type="SObject" required="false" assignTo="{!myObject}" />
+    <apex:attribute name="fieldName" access="global" description="This is the field name" type="String" required="true" assignTo="{!fieldName}" />
+    <apex:attribute name="picklistEntries" access="global" description="Entries to override Salesforce defaults" type="String" required="false" assignTo="{!picklistEntries}" />
+    <apex:attribute name="required" access="global" description="Is this field required?" type="Boolean" required="false" assignTo="{!required}" />
+    <apex:attribute name="hidden" access="global" description="Is this text hidden?" type="Boolean" required="false" assignTo="{!hidden}" />
+    <apex:attribute name="defaultValue" access="global" description="default value for field, will display and override other values" type="String" required="false" assignTo="{!defaultValue}" />
+	<apex:attribute name="downgrade" access="global" description="Should enhanced features be disabled?" required="false" type="Boolean" assignTo="{!downgrade}" />
+	<apex:attribute name="isNumber" access="global" description="Should the result be saved back to Salesforce as a number" required="false" type="Boolean" assignTo="{!isNumber}" />
+
+    {!onLoad}
+
+	  <apex:outputPanel rendered="{!downgrade != true}">
+	  
+		    <select id="SL{!fieldName}"  name="SL{!fieldName}" style="width:150px">
+			   	 <apex:repeat value="{!picklistValues}" var="v">  
+			          <apex:outputText escape="false" value="{!v.outputHTML}" />	      
+			    </apex:repeat>
+		    </select>
+		    
+		   <span id="S{!fieldName}"><apex:inputText value="{!myValueHolder}" style="display:none" styleClass="{!uid}" /></span>
+		   
+	 </apex:outputPanel> 
+	   
+	 <apex:outputPanel rendered="{!downgrade == true}">
+
+		   	<apex:selectList value="{!myValueHolder}" size="1" styleClass="{!uid} formelement" >
+					<apex:selectOptions value="{!picklistSO}"/>			
+			</apex:selectList>
+			
+	</apex:outputPanel>   
+    
+
+</apex:component>

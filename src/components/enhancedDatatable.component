@@ -1,0 +1,185 @@
+<apex:component controller="EnhancedDatatableController" allowDML="true" access="global" >
+          
+    <apex:attribute name="objectName" access="global" description="Name of object" type="String" required="false" assignTo="{!objectName}" />
+    <apex:attribute name="columns" access="global" description="Comma delimited list of columns to display" type="String" required="true" assignTo="{!columnString}" />
+    <apex:attribute name="editable" access="global" description="Can fields be edited?" type="Boolean" required="false" assignTo="{!editable}" />
+
+    <apex:attribute name="width" access="global" description="width in pixels or percentage" type="String" required="false" assignTo="{!myWidth}" />
+    <apex:attribute name="height" access="global" description="height in pixels or percentage" type="String" required="false" assignTo="{!myHeight}" />
+    <apex:attribute name="rowNumber" access="global" description="Number of rows to display at start" type="String" required="false" assignTo="{!myRowNumber}" />
+    <apex:attribute name="rowOptions" access="global" description="Comma delimited list of row options" type="String" required="false" assignTo="{!myRowOptions}" />
+        
+    <apex:attribute name="displaySearch" access="global" description="Should search bar be displayed?" type="Boolean" required="false" assignTo="{!displaySearch}" />
+    <apex:attribute name="alphabeticPaginateColumn" access="global" description="Column by which to display first letters at top" type="String" required="false" assignTo="{!alphabeticPaginateColumn}" />
+    <apex:attribute name="filterString" access="global" description="SOQL string to append to the search query. Must begin with WHERE" type="String" required="false" assignTo="{!filterString}" />
+
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/cupertino/jquery-ui.css" />    
+    <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.JQGrid372,'css/ui.jqgrid.css')}" />    
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.JQGrid372,'src/i18n/grid.locale-en.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.JQGrid372,'js/jquery.jqGrid.min.js')}"></script>
+
+
+    {!onLoad}
+    
+    
+    <script type="text/javascript">
+
+
+        function getWidthInPct(percent){
+            screen_res = ($('#parentDiv').width())*0.99;
+            col = parseInt((percent*(screen_res/100)));
+            return col;
+        }
+
+        function getHeightInPct(percent){
+            screen_res = ($('#parentDiv').height())*0.99;
+            col = parseInt((percent*(screen_res/100)));
+            return col;
+        }
+        
+        function search{!uid}(arg, field, oper)
+		{
+			if(!oper) oper = 'bw';
+			if(field)
+				$enhanced{!uid}.jqGrid('setGridParam',{search:true, postData:{searchOper:oper,searchField:field, searchString:arg}});
+			else  {
+			
+				var filter = {"groupOp":"OR","rules":[{"field":"FirstName","op":oper,"data":letter},{"field":"Lastname","op":oper,"data":letter},{"field":"Phone","op":oper,"data":letter}] };
+				$enhanced{!uid}.jqGrid('setGridParam',{search:true, postData:{filters:filter} } );
+				//$enhanced{!uid}.jqGrid('setGridParam',{search:true, postData:{searchOper:oper, searchString:arg}});
+				
+				}
+			$enhanced{!uid}.trigger("reloadGrid");
+			return false;
+		}
+
+
+
+        $(document).ready(function() {
+
+	        $enhanced{!uid} = $('#{!uid}');
+
+            $enhanced{!uid}.jqGrid({
+                datatype: "local",
+                colNames:{!colNamesJson},
+                colModel:{!colModelJson},
+                rowNum: {!myRowNumber},
+                rowList: [{!myRowOptions}],
+                pager: '#pager',
+                sortname: 'id',
+                viewrecords: true,
+                sortorder: "desc",
+                caption: "{!objectLabel}",
+                width:getWidth({!myWidth}),
+                gridComplete: function(){ 
+	                			var ids = $enhanced{!uid}.jqGrid('getDataIDs'); 
+	                			for(var i=0;i < ids.length;i++)
+	                			{ 
+		                			var cl = ids[i]; 
+		                			be = "<input style=\"height:22px;width:20px;\" type=\"button\" value=\"E\" onclick=\"jQuery(\"#{!uid}\").editRow(\""+cl+"\");\" />"; 
+		                			se = "<input style=\"height:22px;width:20px;\" type=\"button\" value=\"S\" onclick=\"$enhanced{!uid}.saveRow(\""+cl+"\");\" />"; 
+		                			ce = "<input style=\"height:22px;width:20px;\" type=\"button\" value=\"C\" onclick=\"$enhanced{!uid}.restoreRow(\""+cl+"\");\" />"; 
+		                			$enhanced{!uid}.jqGrid('setRowData',ids[i],{act:be+se+ce}); 
+	                			} 
+                			},
+                height:getHeight({!myHeight})
+              });
+              
+            $enhanced{!uid}.jqGrid('navGrid','#pager', { view:true, del:false }, 
+				{}, // use default settings for edit
+				{}, // use default settings for add
+				{},  // delete instead that del:false we need this
+				{multipleSearch : true}, // enable the advanced searching
+				{closeOnEscape:true} /* allow the view dialog to be closed when user press ESC key*/
+			);
+
+
+
+            
+            var jsondata = {!jsonData};
+            
+            for(var i=0; i <= jsondata.length; i++) 
+                $enhanced{!uid}.jqGrid('addRowData',i+1,jsondata[i]);
+
+            $enhanced{!uid}.trigger("reloadGrid");
+
+
+        });
+
+
+  </script>
+
+
+
+
+  <apex:outputPanel rendered="{!NOT(heightIsPercent)}" >
+      <script type="text/javascript">
+          function getHeight(height) {
+              return height;
+          }
+      </script>
+  </apex:outputPanel>
+    <apex:outputPanel rendered="{!heightIsPercent}" >
+      <script type="text/javascript">
+          function getHeight(height) {
+              height = getHeightInPct(height);
+              return height;
+          }
+      </script>
+  </apex:outputPanel>  
+  <apex:outputPanel rendered="{!widthIsPercent}" >
+      <script type="text/javascript">
+          function getWidth(width) {
+              width = getWidthInPct(width);
+              return width;
+          }
+      </script>
+  </apex:outputPanel>
+
+  <apex:outputPanel rendered="{!NOT(widthIsPercent)}" >
+      <script type="text/javascript">
+          function getWidth(width) {
+              return width;
+          }
+      </script>
+  </apex:outputPanel>
+  
+  
+      <apex:outputPanel rendered="{!displaySearch}">  
+
+        <input id="{!uid}searchbox" type="text" />&nbsp;&nbsp;
+        <script type="text/javascript"> 
+        
+                $(document).ready(function() {
+        
+        			${!uid}searchbox = $('#{!uid}searchbox');
+        			${!uid}searchbox.keyup(function() {
+  						search{!uid}(${!uid}searchbox.val());					
+  					});
+        
+		        });
+        
+         </script>
+        
+
+      </apex:outputPanel>   
+      
+      <apex:outputPanel rendered="{!alphabeticPaginate}"> 
+        
+        <apex:repeat value="{!alphabet}" var="l">
+        
+            <a onclick="search{!uid}('{!l}', '{!alphabeticPaginateColumn}', 'bw');">{!l}</a>&nbsp;
+        
+        </apex:repeat>
+      <BR/> <BR/>
+  </apex:outputPanel> 
+  
+    
+    
+<div id="parentDiv" style="width:100%;"><table id="{!uid}" ></table> </div>
+<div id="pager"></div> 
+    
+
+</apex:component>

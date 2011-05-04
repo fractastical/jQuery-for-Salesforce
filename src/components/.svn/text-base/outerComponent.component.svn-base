@@ -1,0 +1,17 @@
+<apex:component controller="FormControllerTester">
+
+<apex:attribute name="pageController" type="PageControllerBaseTester" description="" assignTo="{!pageController}"/>
+
+{!init}
+
+
+
+   <apex:form >
+   
+      <c:innerComponent order="1" field="{!field}" pageController="{!pageController}"  useEnhancedDatepicker="{!true == true}" />
+
+   </apex:form>
+   
+hello {!pageController.name}
+
+</apex:component>

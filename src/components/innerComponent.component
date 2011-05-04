@@ -1,0 +1,20 @@
+<apex:component controller="FormFieldControllerTester">  
+
+    <apex:attribute name="order" description="Order of the component in the list" type="String" required="false" assignTo="{!order}" />
+    <apex:attribute name="field" description="This is the field that this component will render" type="Form_Field__c" required="true" assignTo="{!field}"/>
+      <apex:attribute name="pageController" 
+          type="PageControllerBaseTester" 
+          assignTo="{!pageController}"   
+          required="true"     
+          description="The controller for the page." /> 
+    <apex:attribute name="useEnhancedDatepicker" description="Should we use the enhanced Datepicker?" type="Boolean" required="false" assignTo="{!useEnhancedDatepicker}" />
+    <apex:attribute name="useEnhancedPicklist" description="Should we use the enhanced Picklist" type="Boolean" required="false"  assignTo="{!useEnhancedPicklist}" />
+    <apex:attribute name="useEnhancedMultiselect" description="Should we use the enhanced Multiselect" type="Boolean" required="false"   assignTo="{!useEnhancedMultiselect}" />
+    <apex:attribute name="useEnhancedText" description="Should we use the enhanced Text?" type="Boolean" required="false"   assignTo="{!useEnhancedText}" />  
+    <apex:attribute name="useEnhancedLookup" description="Should we use the enhanced Lookup?" type="Boolean" required="false" assignTo="{!useEnhancedLookup}" />
+    <apex:attribute name="useEnhancedTextarea" description="Should we use the enhanced Textarea?" type="Boolean" required="false" assignTo="{!useEnhancedTextarea}" />
+
+  
+  Greetings {!pageController.name}
+        
+</apex:component>

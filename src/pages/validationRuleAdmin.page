@@ -1,0 +1,156 @@
+<apex:page standardController="Form__c" extensions="formCreatorController" id="page" >
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"/>
+    <script type="text/javascript" src="{!URLFOR($Resource.JQDaterangepicker20, 'js/daterangepicker.jQuery.js')}"/>
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/cupertino/jquery-ui.css" />    
+    <style type="text/css">  
+         
+       .message {
+            color: red;
+        } 
+        #formfieldheader tr th {
+            border-bottom:2px solid #CCCCCC;
+            white-space:nowrap;
+            padding:1px 0px 4px 1px;
+        }
+        .fftd {
+            border-bottom:1px solid #E3DEB8;
+            color:#333333;
+            padding:1px 0px 4px 1px;
+        }
+       .customPopup{
+            background-color: white;
+            border-style: solid;
+            border-width: 2px;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            z-index: 9999;
+            /* These are the 3 css properties you will need to tweak so the pop 
+            up displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can also add 
+            the height property for a fixed size pop up.*/
+            width: 500px;
+            margin-left: -250px;
+            top:100px;
+        }
+    </style>
+        
+    
+    <script type="text/javascript">
+        var count = 0;
+        
+        $(document).ready(function() {
+            // Initialise the form fields table for sorting 
+            dateRangeInit();
+            
+        });
+        //when the table has been reordered, recalculate the positions (thank you JQuery)
+
+        
+    </script>   
+    
+    <apex:pageMessages />
+    
+    <apex:form id="pageForm">
+                        
+    <apex:PageBlock title="Field Validation" id="pageBlock">
+
+        <!-- Button Section -->
+        <apex:pageBlockButtons >
+            <apex:commandButton value="Save Fields" action="{!saveFields}" status="status"/> 
+
+        </apex:pageBlockButtons>
+ 
+            <!-- Form Fields -->
+            <apex:outputPanel id="formfieldsPanel" style="margin-top:60px"> 
+            <h2>Form Fields</h2>
+            <table id="formfieldheader">
+                <thead class="headerRow">
+                    <tr>  
+                        <th style="width:100px;">Label</th>
+                        <th style="width:150px;">Type</th>
+                        <th style="width:25px;">Req</th>
+                        <th style="width:40px;">Verify</th>
+                        <th style="width:170px;">Validate As</th>
+                        <th style="width:120px;">Values</th>
+                        
+                        
+                    </tr>
+                </thead>
+            </table>
+            <div id="formfieldlisting" class="connectedSortable">
+                <apex:repeat value="{!formFields}" var="f" id="formfieldsRepeat">
+                    <table id="{!f.Name}" class="formfieldrow{!IF(f.APIRequired__c == true, ' apirequired', '')}" style="width: 850px; cursor:pointer;">
+                        <tr title="{!f.Name}" class="formfield">    
+                            <td style="width:100px;border-bottom:1px solid #E3DEB8;">
+                                <apex:outputText value="{!f.Label__c}" />
+                            </td>
+                            <td style="width:150px;border-bottom:1px solid #E3DEB8;">
+                                <apex:outputText rendered="{!f.Type__c != 'Number' && f.Type__c != 'Text' && f.Type__c != 'NumberPicklist' && f.Type__c != 'Picklist' }" value="{!f.Type__c}"/>
+                                <apex:selectList value="{!f.Type__c}" size="1" rendered="{!f.Type__c == 'Text' || f.Type__c == 'Picklist' }">
+                                    <apex:selectOption itemValue="Text" />
+                                    <apex:selectOption itemValue="Picklist" />
+                                </apex:selectList>
+                                <apex:selectList value="{!f.Type__c}" size="1" rendered="{!f.Type__c == 'Number' || f.Type__c == 'NumberPicklist' }">
+                                    <apex:selectOption itemValue="Number" />
+                                    <apex:selectOption itemValue="NumberPicklist" itemLabel="Picklist (Numeric)" />
+                                </apex:selectList>  
+                            </td>  
+                            <td style="width:25px;border-bottom:1px solid #E3DEB8;">
+                                <apex:inputField value="{!f.Required__c}" rendered="{!NOT(f.APIRequired__c) && f.Type__c != 'Header' && f.Type__c != 'Info' }"/>
+                                <apex:outputField value="{!f.APIRequired__c}" rendered="{!f.APIRequired__c}"/>
+                            </td>
+                            <td style="width:40px;border-bottom:1px solid #E3DEB8;">
+                                <apex:inputField value="{!f.Requires_Verification__c}"/>
+                            </td>
+                            <td style="width:170px">&nbsp;
+                               <apex:selectList rendered="{!f.Type__c == 'Text'}" value="{!f.Validate_As__c}" size="1" >
+                                        <apex:selectOptions value="{!textVal}" />
+                                </apex:selectList>
+                                <apex:selectList value="{!f.Validate_As__c}" size="1" rendered="{!f.Type__c == 'Phone'}">
+                                    <apex:selectOptions value="{!phoneVal}" />
+                                </apex:selectList>
+
+                            </td>
+                            <td>
+                                <apex:outputPanel rendered="{!f.Type__c == 'Text'}">
+                                    Length:&nbsp;<apex:inputField value="{!f.Minimum_Length__c}" /> (Min) <apex:inputField value="{!f.Max_Length__c}"  /> (Max) 
+
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!f.Type__c == 'Date'}">
+                                    <apex:inputText value="{!f.Minimum_Date__c}" size="8" styleClass="drp dateRange{!f.Order__c}" /> to<apex:inputText value="{!f.Maximum_Date__c}" styleClass="drp dateRange{!f.Order__c}" size="8" /><span id="after{!f.Order__c}" >&nbsp;</span>
+                                </apex:outputPanel>
+                                <apex:inputField value="{!f.PicklistEntries__c}" rendered="{!f.Type__c == 'Picklist' || f.Type__c == 'NumberPicklist' || f.Type__c == 'Multi-Select' }"/>            
+                                <apex:inputField value="{!f.Info__c}" rendered="{!f.Type__c == 'Info'}"/>            
+                            </td>
+
+
+                        </tr>  
+                    </table>                    
+                </apex:repeat>
+            </div>
+            </apex:outputPanel>
+                        
+    </apex:PageBlock>
+    
+    <apex:outputPanel id="dateRangeInit">
+
+        <script type="text/javascript">
+           function dateRangeInit()    
+           {            
+            <apex:repeat value="{!dateFields}" var="do">
+            
+               $('.dateRange{!do}\\.0').daterangepicker({appendTo: $('#after{!do}\\.0')}); 
+            
+            </apex:repeat>  
+           }
+        </script>
+    
+    </apex:outputPanel>  
+    
+    </apex:form>  
+    
+
+</apex:page>

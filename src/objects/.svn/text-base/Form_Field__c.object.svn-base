@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <fields>
+        <fullName>APIRequired__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This field will be checked if the underlying field is required by the SFDC API. This is needed for the correct rendering of the Web Form editor.</description>
+        <label>APIRequired</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default_Value__c</fullName>
+        <label>Default Value</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Filter__c</fullName>
+        <description>Filter to be applied for field (Lookup, etc.) which require an additional query</description>
+        <label>Filter</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Form__c</fullName>
+        <label>Form</label>
+        <referenceTo>Form__c</referenceTo>
+        <relationshipLabel>Form Fields</relationshipLabel>
+        <relationshipName>Form_Fields</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <type>MasterDetail</type>
+    </fields>
+    <fields>
+        <fullName>Group__c</fullName>
+        <description>Name of group for hide/show rules.</description>
+        <label>Group</label>
+        <length>80</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Hidden__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When this field is checked, it will be hidden in the Web Form</description>
+        <inlineHelpText>Check this field to hide it on the form. Hidden fields require a default value.</inlineHelpText>
+        <label>Hidden</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Info__c</fullName>
+        <description>Custom html block to be displayed if the field type is Info</description>
+        <label>Info</label>
+        <length>32000</length>
+        <type>Html</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Label__c</fullName>
+        <label>Label</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Masked_Input__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Certain fields (phone numbers, etc.) will display a mask that only allows entry in a certain format.</description>
+        <label>Masked Input</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Max_Length__c</fullName>
+        <defaultValue>255</defaultValue>
+        <label>Max Length</label>
+        <precision>5</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Maximum_Date__c</fullName>
+        <description>Latest date that can be allowed for a text field</description>
+        <label>Maximum Date</label>
+        <length>15</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Minimum_Date__c</fullName>
+        <description>Earliest date to be allowed for entry on a Date field</description>
+        <label>Minimum Date</label>
+        <length>15</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Minimum_Length__c</fullName>
+        <label>Minimum Length</label>
+        <precision>5</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>Object_Name__c</fullName>
+        <description>Object name for a reference field</description>
+        <label>Object Name</label>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Order__c</fullName>
+        <label>Order</label>
+        <precision>5</precision>
+        <scale>0</scale>
+        <type>Number</type>
+    </fields>
+    <fields>
+        <fullName>PicklistEntries__c</fullName>
+        <label>PicklistEntries</label>
+        <length>6000</length>
+        <type>LongTextArea</type>
+        <visibleLines>2</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates if this field is required or not.</description>
+        <label>Required</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Requires_Verification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Creates second field which must match the first.</description>
+        <label>Requires Verification</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Tooltip__c</fullName>
+        <label>Tooltip</label>
+        <length>80</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <label>Type</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Update_On__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Set this field to true if you want to update any objects which have the same value as this field instead of inserting it.</description>
+        <label>Update On</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Validate_As__c</fullName>
+        <label>Validate As</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Name</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>US Phone</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>International Phone</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Number</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <label>Form Field</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>Object_Name__c</columns>
+        <columns>Form__c</columns>
+        <columns>NAME</columns>
+        <columns>Group__c</columns>
+        <columns>Type__c</columns>
+        <columns>Label__c</columns>
+        <columns>PicklistEntries__c</columns>
+        <columns>Hidden__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Form Field Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Form Fields</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

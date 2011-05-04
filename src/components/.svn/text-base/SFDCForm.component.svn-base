@@ -1,0 +1,207 @@
+<apex:component controller="SFDCFormController" allowDML="true" access="global" >   
+
+    <apex:attribute name="onCompleteJavascript"  access="global" description="Javascript that will run when form is finished" type="String" required="false" />
+    <apex:attribute name="formName" access="global" description="Name of form to be rendered" type="String" required="true" assignTo="{!formName}" />
+
+      <apex:attribute name="pageController" 
+          type="PageControllerBase"   
+          assignTo="{!pageController}"   
+          required="true" 
+          access="global"
+          description="The controller for the page." />  
+
+    <apex:attribute name="object"  access="global" assignTo="{!myObject}" type="SObject" description="object fields will be saved to" required="false" />  
+
+    {!init}  
+
+        <apex:outputText escape="false" value="{!pageController.javascriptDependencies}"/>  
+
+        <script type="text/javascript" src="{!$Resource.JQAdditionalValidationForSalesforce}"></script>
+    
+
+       <apex:outputPanel id="finished"> 
+       
+            <apex:outputPanel rendered="{!hasMessages}">
+        
+                <apex:pageMessages id="msgs"/>
+                
+                <script type="text/javascript">
+                    
+                    function finished() {
+                      
+                    }
+                
+                </script>
+        
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!NOT(hasMessages)}">
+                    
+                <script type="text/javascript">
+                    
+                    function finished() {
+    
+                        $('#form').hide();
+                        $('#finishedDisplay').fadeIn();
+                    
+                    }
+                
+                </script>
+        
+            </apex:outputPanel>
+    
+       </apex:outputPanel>
+
+
+    <apex:outputPanel rendered="{!NOT(empty)}">
+    
+            <link href="{!stylesheet}" rel="stylesheet" type="text/css" />
+        
+            <style type="text/css">    
+                         
+                td { padding-top: 2px; padding-bottom: 2px; font-size: 12px }
+                td.tdlabel { width: 200px; }
+                td.tdvalue { width: 250px; }
+                input[type="text"]  { width:150px; } 
+                
+            </style>         
+            
+            <div id="form" style="display:none">
+            
+            
+            <h2>{!form.Title__c}</h2>
+            
+                <apex:form id="form" styleclass="f{!formname} form">
+        
+            <br/>  
+            
+            
+            
+            <apex:outputPanel rendered="false">  <!-- was hasRequired  -->
+                <span class="required" style="float:left;padding-left:120px;width:400px;">*&nbsp;Required</span>
+                <BR/>
+           </apex:outputPanel>
+           
+        
+                <!-- Start of the form fields -->
+            <table>
+          
+                <apex:repeat value="{!allFields}" var="f">  
+
+
+                    <apex:outputPanel rendered="{!f.field.Hidden__c != true}">
+        
+                        <apex:outputPanel rendered="{!(f.field.Type__c == 'Header') && (f.field.Label__c != null)}">
+                            <tr>
+                                <td colspan="2" style="padding:10px 0px 10px 0px;" >
+                                                   <div class="ui-helper-reset ui-state-default ui-corner-all" >
+                                                     <span style="padding-top:5px;padding-left:5px;">{!f.field.Label__c}</span> 
+                                                   </div>
+                                </td>
+                            </tr>             
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!f.field.Type__c == 'Info'}">
+                            <tr>
+                                <td colspan="2" style="padding:2px 0px 2px 0px;" >
+                                    <apex:outputField value="{!f.field.Info__c}"/>
+                                </td>
+                            </tr>             
+                        </apex:outputPanel>
+
+                            
+                        <apex:outputPanel rendered="{!f.field.Type__c != 'Header' }" >
+                            <tr class="cfg{!f.field.Group__c}">      
+                                <td class="tdlabel" ><c:enhancedLabel label="{!f.field.Label__c}" tooltip="{!f.field.Tooltip__c}" for="{!f.field.name}" renderIcon="{!f.hasTooltip}" /><apex:outputText value=" *" rendered="{!f.field.Required__c}" styleClass="required"/></td>    
+                                <td class="tdValue">
+                                    <c:inputformfield field="{!f.field}" order="{!f.order}" pageController="{!pageController}"  useEnhancedDatepicker="{!form.Use_Enhanced_Datepicker__c}" useEnhancedMultiselect="{!form.Use_Enhanced_Multiselect__c}" useEnhancedPicklist="{!form.Use_Enhanced_Picklist__c}" useEnhancedText="{!form.Use_Enhanced_Text__c}" useEnhancedLookup="{!form.Use_Enhanced_Lookup__c}" useEnhancedTextarea="{!form.Use_Enhanced_Textarea__c}" />                
+                                </td>
+                            </tr>
+                        </apex:outputPanel>   
+                        
+                        <apex:outputPanel rendered="{!f.field.Requires_Verification__c}">
+                            <tr class="cfg{!f.field.Group__c}">
+                            <td class="tdlabel"><c:enhancedLabel label="Verify {!f.field.Label__c}" for="{!f.field.name}2"/><apex:outputText rendered="{!f.field.Required__c}"  value=" *" styleClass="required"/>
+                            </td>
+                            <td class="tdValue">  
+                                <input type="Text" equalTo=".T{!f.field.name}" style="width:150px" required="true" />
+                            </td>
+                            </tr>
+                        </apex:outputPanel>
+                             
+                    </apex:outputPanel>     
+
+
+
+                </apex:repeat>
+                <!-- Again, but now the hidden fields, we create them here to avoid empty TD cells -->
+                <div id="hiddenFields" style="display:none">
+                    <apex:repeat value="{!fields}" var="f">
+                            <apex:outputPanel rendered="{!f.Type__c != 'Header' && f.Hidden__c == true}">
+                                <c:inputformfield field="{!f}" pageController="{!pageController}"  />                
+                            </apex:outputPanel>
+                    </apex:repeat>
+                </div>
+            
+                <tr><td class="tdlabel">&nbsp;</td><td>&nbsp;</td></tr>
+                <tr><td class="tdlabel">&nbsp;</td><td>&nbsp;</td></tr>  
+                <tr><td></td><td><apex:commandButton value="{!form.Save_Button_Text__c}" onClick="removeRequiredFromHiddenFields();" rendered="{!NOT(empty)}" /></td></tr>
+            </table>
+            
+                
+               <apex:actionFunction action="{!pageController.ecSave}" name="saveMe" rerender="msgs, finished" onComplete="finished();{!onCompleteJavascript}" ></apex:actionFunction>
+        
+            </apex:form>
+            
+           <apex:outputText escape="false" value="{!pageController.completeJavascript}"/>  
+        
+           <script type="text/javascript">  
+           
+                        function removeRequiredFromHiddenFields()
+                        {
+                          $('.formelement:hidden').each( function (el) { 
+                                    //console.log($(this));
+                                    $(this).rules( "remove", "required");
+                           });
+                        
+                        }
+        
+                        <apex:repeat value="{!fieldsWithShowRules}" var="f">
+        
+                                    $('.cf{!f.order} :input').change(function() {
+                                        
+                                            <apex:repeat value="{!f.ShowRules}" var="r">
+                                                if($(this).val() != '{!r.firstValueToShow}'<apex:repeat value="{!r.valuesToShow}" var="av">&& $(this).val() != '{!av}'</apex:repeat>) {
+                                                    $('.cfg{!r.groupName}').fadeOut();  
+                                                }  
+                                                else if($(this).val() == '{!r.firstValueToShow}'<apex:repeat value="{!r.valuesToShow}" var="av">|| $(this).val() == '{!av}'</apex:repeat>) {
+                                                    $('.cfg{!r.groupName}').fadeIn();
+                                                }
+                                                
+                                            </apex:repeat>
+                                    });
+                        </apex:repeat>      
+                        <apex:repeat value="{!fieldsWithMaxLength}" var="f">
+        
+                                    $('.cf{!f.order} :input').keypress(function(e) {
+                                       
+                                                $('.form').validate();
+                                        });
+
+                        </apex:repeat>      
+        
+                        $(document).ready(function () {         
+                                    $('#form').show();
+                                    <apex:repeat value="{!fieldsWithGroups}" var="f">  
+                                        $(".cfg{!f.field.Group__c}").hide();
+                                    </apex:repeat>                    
+                                    }                                   
+                         );
+                            
+                </script>
+            
+        </div>   
+        <div id="finishedDisplay" style="display:none">
+                <apex:outputField value="{!form.Finished_Blurb__c}" />          
+        </div>    
+</apex:outputPanel>    
+</apex:component>

@@ -1,0 +1,75 @@
+<apex:page showHeader="true" standardStylesheets="true" >
+  
+    <script
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"
+        type="text/JavaScript" />
+        
+    <script
+        src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"
+        type="text/JavaScript" />
+        
+        
+    <apex:stylesheet value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/cupertino/jquery-ui.css"/>
+    
+    
+    <script type="text/JavaScript">
+    function search() {
+        $("#status").html(
+                "Making a Jquery Ajax Request to '{!$Page.largeLookup}'");
+
+        // Make the Ajax Request
+        $.getJSON("{!$Page.largeLookup}", {
+            "core.apexpages.devmode.url" :'1',    
+            "term" :$('#query').val()
+        }, function(data) {
+            $("#response").html(JSON.stringify(data));
+        });  
+
+
+        $("#status").html("Ajax Request Completed !");
+    }
+      
+    $(function() {  
+
+
+        $("#autoc").autocomplete({
+        
+            source: function(request, response) {
+                    $.getJSON("{!$Page.largeLookup}", {
+                       // "core.apexpages.devmode.url" :'1',   
+                        term: request.term
+                        
+                    }, response);
+                },
+        select: function(event, ui) {
+        
+           $('#response').html(ui.item.id);
+        
+        },
+        minLength: 2
+            
+        });
+    });
+    </script>
+    
+    
+    <apex:sectionHeader title="Ajax Client Demo" />
+
+    <apex:pageblock >
+            <apex:pageBlockSection title="Query Console">
+                <form id="qform">Query String <input type="text" id="query" />
+                <input type="button" onclick="search()" value="Search Objects " /></form>
+                Query String Autocomplete <input type="text" id="autoc" />
+
+            </apex:pageBlocksection>
+
+            <apex:pageBlockSection title="Ajax Console">
+                <h1>Status</h1> 
+                <pre id="status" style="font-size: 16px" />
+                    
+                <h1> JSON Response </h1> 
+                <div id="response" style="font-size: 16px;width: 300px;font-family: monospace; font-stretch: expanded" />
+        </apex:pageBlocksection>
+    </apex:pageblock>
+    
+</apex:page>

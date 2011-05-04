@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>formGenerator</content>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>formGenerator</content>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <fields>
+        <fullName>Default_Record__c</fullName>
+        <description>ID of object which contains the default values of the form</description>
+        <label>Default Record</label>
+        <length>20</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <label>Description</label>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Finished_Blurb__c</fullName>
+        <description>HTML to display to user when they are finished with the form.</description>
+        <label>Finished Blurb</label>
+        <length>32000</length>
+        <type>Html</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Object_Label__c</fullName>
+        <description>The label of the object which fields will be filled by this form.</description>
+        <inlineHelpText>The label of the object which fields will be filled by this form.</inlineHelpText>
+        <label>Object Label</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Object_Name__c</fullName>
+        <description>The API name of the object which fields will be filled by this form.</description>
+        <inlineHelpText>The API name of the object which fields will be filled by this form.</inlineHelpText>
+        <label>Object Name</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Return_URL__c</fullName>
+        <description>URL the user will go to after saving the form.</description>
+        <inlineHelpText>URL the user will be redirected to after saving the form.</inlineHelpText>
+        <label>Return URL</label>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Save_Button_Text__c</fullName>
+        <defaultValue>&quot;Save&quot;</defaultValue>
+        <description>The text that will appear on the form&apos;s save button.</description>
+        <inlineHelpText>The text that will appear on the form&apos;s save button.</inlineHelpText>
+        <label>Save Button Text</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>SavedByWebformeditor__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This field is internal to the app and is used to track if people didn&apos;t forget to override the edit and new buttons on the webform object. Only the webform editor will set this flag.</description>
+        <label>SavedByWebformeditor</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Style__c</fullName>
+        <description>JQuery UI Style</description>
+        <label>Style</label>
+        <length>80</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Title__c</fullName>
+        <description>The title of the form.</description>
+        <inlineHelpText>The title that will appear on the form. This can be left blank.</inlineHelpText>
+        <label>Title</label>
+        <length>255</length>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Datepicker__c</fullName>
+        <defaultValue>true</defaultValue>
+        <label>Use Enhanced Datepicker</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Lookup__c</fullName>
+        <defaultValue>true</defaultValue>
+        <label>Use Enhanced Lookup</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Multiselect__c</fullName>
+        <defaultValue>true</defaultValue>
+        <label>Use Enhanced Multiselect</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Picklist__c</fullName>
+        <defaultValue>true</defaultValue>
+        <label>Use Enhanced Picklist</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Text__c</fullName>
+        <defaultValue>false</defaultValue>
+        <label>Use Enhanced Text</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Enhanced_Textarea__c</fullName>
+        <defaultValue>true</defaultValue>
+        <label>Use Enhanced Textarea</label>
+        <type>Checkbox</type>
+    </fields>
+    <label>Form</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Form Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Forms</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Object_Label__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Description__c</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Web_Form_Name_field_can_not_be_empty</fullName>
+        <active>true</active>
+        <description>This rule will fire if somebody fills in a web form without filling in the name field.</description>
+        <errorConditionFormula>IF( ISNULL( Name ), true, false )</errorConditionFormula>
+        <errorDisplayField>Name</errorDisplayField>
+        <errorMessage>The &apos;Name&apos; field can not be empty.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Conditional_Field_Display</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Conditional Field Display</masterLabel>
+        <openType>sidebar</openType>
+        <page>conditionalDisplayAdmin</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Field_Validation</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Field Validation</masterLabel>
+        <openType>sidebar</openType>
+        <page>validationRuleAdmin</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Preview</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <hasScrollbars>true</hasScrollbars>
+        <height>600</height>
+        <isResizable>true</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>Preview</masterLabel>
+        <openType>newWindow</openType>
+        <position>none</position>
+        <protected>false</protected>
+        <url>/apex/Form?id={!Form__c.Id}</url>
+    </webLinks>
+</CustomObject>

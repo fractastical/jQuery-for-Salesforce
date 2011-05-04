@@ -1,0 +1,31 @@
+<apex:component controller="EnhancedRichTextController" allowDML="true" >
+    
+      <apex:attribute name="pageController" 
+          type="PageControllerBase" 
+          assignTo="{!pageController}"   
+          required="true" 
+          description="The controller for the page." />
+          
+    <apex:attribute name="object" description="This is the object" type="SObject" required="false" assignTo="{!myObject}" />
+    <apex:attribute name="fieldName" description="This is the field name" type="String" required="true" assignTo="{!fieldName}" />
+    <apex:attribute name="required" description="Is this field required?" type="Boolean" required="false" assignTo="{!required}" />
+    <apex:attribute name="hidden" description="Is this text hidden?" type="Boolean" required="false" assignTo="{!hidden}" />
+    <apex:attribute name="defaultValue" description="default value for field, will display and override other values" type="String" required="false" assignTo="{!defaultValue}" />
+	<apex:attribute name="downgrade" description="Should enhanced features be disabled?" required="false" type="Boolean" assignTo="{!downgrade}" />
+
+  
+    {!onLoad}
+  
+	<apex:outputPanel rendered="{!downgrade != true}">
+
+			Not yet supported.
+	   
+	 </apex:outputPanel> 
+	 <apex:outputPanel rendered="{!downgrade == true}">
+	 
+		   <apex:inputTextArea richText="true" value="{!myValueHolder}" />
+	 	
+	 </apex:outputPanel>
+	 
+	   
+</apex:component>

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/14/trunk/src/objects
+END
+Field_Show_Rule__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/14/trunk/src/objects/Field_Show_Rule__c.object
+END
+Formation_Settings__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/9/trunk/src/objects/Formation_Settings__c.object
+END
+Formation__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/9/trunk/src/objects/Formation__c.object
+END
+TestLookupObject__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/14/trunk/src/objects/TestLookupObject__c.object
+END
+Form__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/14/trunk/src/objects/Form__c.object
+END
+TestObject__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/14/trunk/src/objects/TestObject__c.object
+END
+Form_Field__c.object
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/14/trunk/src/objects/Form_Field__c.object
+END

@@ -1,0 +1,36 @@
+<!--   
+Copyright notice at page bottom
+-->
+ 
+<apex:page controller="FormDisplayController" showheader="false">
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"/>
+    <script  type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.6/jquery.validate.min.js"></script>
+    <script  type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.6/additional-methods.js"></script>
+    
+    <style type="text/css">
+     
+        #container {position: relative; width: 100%; margin:15px 15px; }
+        
+    </style>
+  
+    <apex:stylesheet value="{!URLFOR($Resource.JQueryUICup,'development-bundle/themes/cupertino/jquery.ui.all.css')}"/>
+
+         <div id="container">
+         
+              <div id="title"><h2><apex:outputText value="{!form.Title__c}" /></h2></div>
+             
+             <!-- Validation Messages -->
+            <apex:messages styleClass="required" id="msgs"/>
+                 
+              <div id="formDisplay">
+                   <c:Form formname="{!form.Title__c}" onCompleteJavascript="$('#formDisplay').hide();$('#finishedDisplay').show();" pageController="{!this}" /> 
+              </div>     
+              <div id="finishedDisplay" style="display:none">
+                  <apex:outputField value="{!form.Finished_Blurb__c}" />          
+              </div>
+              
+         </div>
+
+</apex:page>

@@ -1,0 +1,37 @@
+<apex:page controller="EnhancedLookupController" showHeader="false" >
+
+<apex:form id="hello">
+
+    <apex:actionFunction name="sayHello" action="{!getCastedValue}" rerender="out" status="myStatus"/>
+        
+    <apex:actionFunction name="loadLookup" action="{!getOnLoad}" rerender="foo">
+      <apex:param name="siteUrl2" assignTo="{!siteUrl}" value=""  />
+    </apex:actionFunction>
+    
+</apex:form>
+
+      <script>
+      
+         window.onload=setUrl;
+         //var v = window.location.href;
+         //
+        function setUrl() {
+         loadLookup(window.location.href);
+         }
+      </script> 
+      
+      <apex:outputPanel id="foo">
+
+In page Visualforce: {!$Page.largeLookup}<BR/>
+
+From APEX: {!testUrl}<BR/>
+
+from APEX (method 2) : {!siteURl}<BR/>
+
+from APEX (method 2) : {!extension}<BR/>
+
+from APEX (method 2) : {!testUrl2}
+</apex:outputPanel>
+
+
+</apex:page>

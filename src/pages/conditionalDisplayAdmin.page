@@ -1,0 +1,273 @@
+<apex:page standardController="Form__c" extensions="FormAdminController" id="page">
+  
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"/>
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/cupertino/jquery-ui.css" />    
+    <style type="text/css">          
+          
+       .message {  
+            color: red;  
+        }
+        #formfieldheader tr th {
+            border-bottom:2px solid #CCCCCC;
+            white-space:nowrap;
+            padding:1px 0px 4px 1px;
+        }
+        .fftd {
+            border-bottom:1px solid #E3DEB8;
+            color:#333333;
+            padding:1px 0px 4px 1px;
+        }
+       .customPopup{
+            background-color: white;
+            border-style: solid;
+            border-width: 2px;
+            left: 50%;      
+            padding:10px;
+            position: absolute;
+            z-index: 9999;
+            /* These are the 3 css properties you will need to tweak so the pop 
+            up displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can also add 
+            the height property for a fixed size pop up.*/
+            width: 500px;
+            margin-left: -250px;
+            top:100px;
+        }
+    </style>
+        
+    
+    <apex:pageMessages />
+    
+
+
+        <apex:sectionHeader title="Conditional Field Display" subtitle="editor"/>
+    <apex:form id="pageForm">
+        <apex:PageBlock title="Conditional Field Display Editor" id="pageBlock">
+
+            <!-- Button Section -->
+            <apex:pageBlockButtons >
+                    <apex:commandButton value="Save" action="{!save}" status="status"/> 
+            </apex:pageBlockButtons>
+
+            <em>Warning: Groups will not save unless you add a field to them</em>
+            
+            <!-- Object Field List -->
+            <apex:PageBlockSection columns="2" id="fieldSection">
+            
+
+                <apex:outputPanel id="leftCol">
+                    <apex:outputPanel id="addGroupPanel">
+
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                   <strong><apex:outputLabel value="Add Group" /></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Group Name&nbsp;&nbsp;<apex:inputText value="{!currGroup.groupName}" />
+            
+                                 </td>
+                                <td>
+                                    <apex:commandLink action="{!addGroup}" rerender="groupsPanel, formfieldsPanel, addGroupPanel" status="status"  oncomplete="fieldsSortable();">                                                 
+                                        <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add"/>
+                                    </apex:commandLink>
+                                 </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        
+                    </apex:outputPanel>
+                        <!-- Form Fields -->
+                            <apex:outputPanel id="formfieldsPanel" style="margin-top:60px"> 
+                                <h2>Form Fields</h2>
+                                <table id="formfieldheader">
+                                    <thead class="headerRow">
+                                        <tr>
+                                            <th style="width:125px;">Label</th>
+                                            <th style="width:80px;">Type</th>
+                                            <th style="width:80px;">Add to Group</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div id="formfieldlisting" class="connectedSortable">
+                                    <apex:repeat value="{!formFields}" var="f" id="formfieldsRepeat">
+                                        <table style="width:285px; cursor:pointer;">
+                                            <tr title="{!f.Name}" class="formfield">    
+                                                <td style="width:125px;border-bottom:1px solid #E3DEB8;">
+                                                    <apex:outputField value="{!f.Label__c}"/>
+                                                </td>
+                                                <td style="width:80px;border-bottom:1px solid #E3DEB8;"><apex:outputText value="{!f.Type__c}"/></td>                
+                                                <td>
+                                                    <apex:commandLink action="{!enablePopup}" rerender="popup" rendered="{!hasGroups}" onComplete="$('#addtogroup').dialog('open');" >                                                 
+                                                        <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add to Group"/>
+                                                        <apex:param name="fieldName" value="{!f.Name}" assignTo="{!fieldName}" />
+                                                    </apex:commandLink>
+                                                 </td>
+                                            </tr>
+                                        </table>                    
+                                    </apex:repeat>  
+                                </div>
+                            </apex:outputPanel>
+                 </apex:outputPanel>
+  
+                    <apex:outputPanel id="groupsPanel">
+                    
+                       <h2>Groups</h2><BR/><BR/>
+                       
+                       <apex:repeat value="{!groups}" var="g">
+
+                           <table style="width:450px">                       
+                                    <tr><td colspan="2"><h3>{!g.groupName}</h3><BR/></td></tr>
+                                    <tr><td>Displayed when: <apex:selectList value="{!g.showFieldName}" size="1">
+                                                        <apex:selectOptions value="{!formFieldNames}" />
+                                                        <apex:actionSupport event="onchange" action="{!saveShowField}" rerender="groupsPanel"> 
+                                                            <apex:param name="mygroupname" value="{!g.groupName}" />    
+                                                        </apex:actionSupport>
+                                                     </apex:selectList><!-- equals --> 
+                                                        &nbsp; <!-- Added by Vilpesh 09292010 -->
+                                                        <apex:selectList value="{!g.showRule.Operator__c}" size="1" multiselect="false">
+                                                        <apex:selectOptions value="{!OperatorNames}" />
+                                                        </apex:selectList><!-- End by Vilpesh 09292010 --></td>
+                                                     <td>&nbsp;
+                                                     </td>
+                                    </tr>
+                                    <apex:repeat value="{!g.showVals}" var="v">
+                                        <tr>  
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <strong><apex:outputText value="{!v}" /></strong> <apex:outputText escape="false" value=" OR " />
+                                                <apex:commandLink action="{!removeVal}" rerender="groupsPanel" >                                                 
+                                                <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_delete.png')}" title="Remove"/>
+                                                    <apex:param name="groupname" value="{!g.groupName}" assignTo="{!groupname}" />
+                                                    <apex:param name="val" value="{!v}" assignTo="{!val}" />
+                                                </apex:commandLink>
+                                            </td>
+                                        </tr>
+                                    </apex:repeat> 
+                                    <tr>
+                                        <td>&nbsp;
+                                        </td>   
+                                        <td> 
+                                            <strong>Add Condition </strong>&nbsp;
+                                            
+                                            <apex:commandLink action="{!enableAddValPopup}" rerender="addValPopup" onComplete="$('#addval').dialog('open');" >    
+                                                <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add Value"/>
+                                                <apex:param name="groupname" value="{!g.groupName}" assignTo="{!groupname}" />
+                                                <apex:param name="activeShowFieldType" value="{!g.ShowFieldType}" assignTo="{!activeShowFieldType}" />
+                                            </apex:commandLink>  
+                                       </td>
+                                    </tr>
+                                </table>                                 
+
+                            <h3>The following fields are displayed:</h3>
+                                         
+                            <table >
+                                <thead class="headerRow">  
+                                <tr>
+                                    <th style="width:150px;">Label</th>
+                                    <th style="width:80px;">Type</th>
+                                    <th style="width:30px;">Remove</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <div id="groupListing" class="connectedSortable">
+
+                                <apex:repeat value="{!g.fields}" var="f" >
+                                    
+                                    <table id="{!f.Name}" class="formfieldrow" style="width: 300px; cursor:pointer;">
+                                        <tr title="{!f.Name}" class="groupField">  
+                                            <td style="width:150px;border-bottom:1px solid #E3DEB8;"><apex:outputField value="{!f.Label__c}"/></td>
+                                            <td style="width:95px;border-bottom:1px solid #E3DEB8;"><apex:outputText value="{!f.Type__c}"/></td>                
+                                            <td>
+                                                <apex:commandLink action="{!removeFieldFromGroup}" rerender="groupsPanel,formfieldsPanel" >                                                 
+                                                <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_delete.png')}" title="Remove"/>
+                                                    <apex:param name="groupname" value="{!g.groupName}" assignTo="{!groupname}" />
+                                                    <apex:param name="fieldname" value="{!f.name}" assignTo="{!fieldname}" />
+                                                </apex:commandLink>
+                                            </td>
+                                        </tr>   
+                                    </table>                 
+                                </apex:repeat><BR/><BR/>   
+                            </div>
+                        </apex:repeat>    
+
+                    </apex:outputPanel>
+
+
+
+                <!-- Action Status -->
+                <apex:actionStatus stopText="" id="status"> 
+                    <apex:facet name="start">               
+                        <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/time.png')}" title="Wait..."/>                                 
+                    </apex:facet>
+                </apex:actionStatus>
+                
+            </apex:PageBlockSection>
+        </apex:PageBlock>
+   </apex:form>  
+
+      <div id="addtogroup" style="display:none" >
+        <apex:outputPanel id="popup">
+           <apex:form >  
+        
+                    Group to add to:<br/><br/>
+                        <apex:selectList size="1" value="{!groupname}">
+                            <apex:selectOptions value="{!groupsSO}" />
+                        </apex:selectList>
+                    <apex:commandButton value="Add to this group" action="{!addFieldToGroup}" rerender="groupsPanel,popup,formfieldsPanel" onComplete="$('#addtogroup').dialog('close');" />
+                    <apex:commandButton value="Cancel" action="{!disablePopup}" immediate="true" rerender="popup" onComplete="$('#addtogroup').dialog('close');" />  
+           </apex:form>  
+
+            </apex:outputPanel>
+        </div>
+
+      <div id="addval" style="display:none" >  
+  
+        <apex:outputPanel id="addValPopup">
+              <apex:form >  
+
+                            <apex:inputText value="{!val}" size="10" rendered="{!activeShowFieldType != 'Picklist' && activeShowFieldType != 'NumberPicklist'}" />
+                             <apex:selectList value="{!val}" size="1" rendered="{!activeShowFieldType == 'Picklist'}" >
+                                 <apex:selectOptions value="{!activeShowFieldPicklistSO}"  />
+                             </apex:selectList>    
+                             <apex:selectList value="{!val}" size="1" rendered="{!activeShowFieldType == 'NumberPicklist'}" >
+                                 <apex:selectOptions value="{!activeShowFieldPicklistSO}" />
+                             </apex:selectList>      
+                            <apex:commandButton value="Add" action="{!addVal}" rerender="groupsPanel,addValPopup,formfieldsPanel" onComplete="$('#addval').dialog('close');"  / >      
+                             <apex:commandButton value="Cancel" action="{!disableAddValPopup}" rerender="addValPopup" onComplete="$('#addval').dialog('close');" />  
+               </apex:form>  
+            </apex:outputPanel>
+      </div>
+
+
+                    <script type="text/javascript">
+                    
+                           $(function(){      
+                  
+                                $("#addval").dialog({
+                                    autoOpen: false,
+                                    modal: true,
+                                    closeable: false,
+                                    resizable: false,
+                                    width: 600
+                                });
+                                
+                               $("#addtogroup").dialog({
+                                    autoOpen: false,
+                                    modal: true,
+                                    closeable: false,
+                                    resizable: false,
+                                    width: 600
+                                });
+                                
+                                
+                            });
+                              
+                      </script>
+
+
+
+</apex:page>

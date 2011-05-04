@@ -1,0 +1,9 @@
+/* Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
+ * Licensed under the MIT License (LICENSE.txt).
+ *
+ * Version 1.0
+ *
+ * Contributions by:
+ *   - Karl Swedberg
+ */
+(function(a){a.fn.extend({expandable:function(c){var d=a.extend({duration:"normal",interval:750,within:1,by:2,init:false},c);return this.filter("textarea").each(function(){var k=a(this).css({display:"block",overflow:"hidden"}),i=k.height(),j=this.offsetHeight-i,h=(parseInt(k.css("lineHeight"),10)||parseInt(k.css("fontSize"),10)),e=a('<div style="position:absolute;top:-999px;left:-999px;border-color:#000;border-style:solid;overflow-x:hidden;visibility:hidden;z-index:0;white-space: pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;" />').appendTo("body"),g;a.each("borderTopWidth borderRightWidth borderBottomWidth borderLeftWidth paddingTop paddingRight paddingBottom paddingLeft fontSize fontFamily fontWeight fontStyle fontStretch fontVariant wordSpacing lineHeight width".split(" "),function(l,m){e.css(m,k.css(m))});k.bind("keypress",function(l){if(l.keyCode=="13"){f()}}).bind("focus blur",function(l){if(l.type=="blur"){clearInterval(g)}if(l.type=="focus"){g=setInterval(f,d.interval)}});function f(){var q=k.val(),m,l,p,n,o;e.html(b(q).replace(/\n/g,"&nbsp;<br>"));l=k[0].offsetHeight-j;p=e[0].offsetHeight-j;n=Math.floor(p/h);o=Math.floor((l/h)-n);if(o<=d.within){m=h*(n+Math.max(o,0)+d.by);k.stop().animate({height:m},d.duration)}else{if(o>d.by+d.within){m=Math.max(l-(h*(o-(d.by+d.within))),i);k.stop().animate({height:m},d.duration)}}}if(d.init){f()}}).end()}});function b(d){var c={"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"};return(d+"").replace(/[<>&"'\/]/g,function(e){return c[e]})}})(jQuery);

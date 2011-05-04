@@ -1,0 +1,354 @@
+<apex:page standardController="Form__c" extensions="formCreatorController" id="page">
+
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"/>
+    <script type="text/javascript" src="{!URLFOR($Resource.JQDaterangepicker20, 'js/daterangepicker.jQuery.js')}"/>
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/cupertino/jquery-ui.css" />    
+    <style type="text/css">
+       
+       .message {
+            color: red;
+        }
+        #formfieldheader tr th {
+            border-bottom:2px solid #CCCCCC;
+            white-space:nowrap;
+            padding:1px 0px 4px 1px;
+        }
+        .fftd {
+            border-bottom:1px solid #E3DEB8;
+            color:#333333;
+            padding:1px 0px 4px 1px;
+        }
+       .customPopup{
+            background-color: white;
+            border-style: solid;
+            border-width: 2px;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            z-index: 9999;
+            /* These are the 3 css properties you will need to tweak so the pop 
+            up displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can also add 
+            the height property for a fixed size pop up.*/
+            width: 500px;
+            margin-left: -250px;
+            top:100px;
+        }
+    </style>
+        
+
+    <apex:form >
+        <apex:actionFunction action="{!addField}" name="addFormField" oncomplete="fieldsSortable()" rerender="formfieldsPanel, objectfieldsPanel" >
+            <apex:param name="firstParam" assignTo="{!fname}" value="" />
+            <apex:param name="secondParam" assignTo="{!position}" value="" />
+        </apex:actionFunction>
+    </apex:form>
+    <apex:form >
+        <apex:actionFunction action="{!removeField}" name="removeFormField" oncomplete="fieldsSortable()" rerender="formfieldsPanel, objectfieldsPanel" >
+            <apex:param name="firstParam" assignTo="{!fname}" value="" />
+        </apex:actionFunction>
+    </apex:form>
+    
+    <script type="text/javascript">
+        var count = 0;
+        
+        $(document).ready(function() {
+            // Initialise the form fields table for sorting 
+            fieldsSortable();
+            
+        });
+        
+        function fieldsSortable() {
+        
+             $("#formfieldlisting").sortable({
+                connectWith: '.connectedSortable',
+                update: function(ev, ui) { reorder(); },
+                receive: function(ev, ui) {
+                    reorder();  
+                    addFormField(ui.item.find("tr").attr("title"),ui.item.find(".order").val());
+                }
+                //,
+                //cancel: '.apirequired'
+                    
+                });
+                
+                $("#objectfieldlisting").sortable({
+                    connectWith: '.connectedSortable',
+                    receive: function(ev, ui) {
+                
+                        removeFormField(ui.item.find("tr").attr("title"));
+                    }
+                
+            }).disableSelection();
+            
+            dateRangeInit();
+        
+        }
+        //when the table has been reordered, recalculate the positions (thank you JQuery)
+
+        function reorder(){
+            var counter = 1;
+            
+            //the hidden fields that are bound to the form field order
+            $('#formfieldlisting .order').each(function(i, o){
+                o.value = i+1;
+            });
+              
+            //make sure the output matches
+            $('#formfieldlisting .orderoutput').each(function(i, o){
+                //alert('index: ' + i + ' order : ' + o.value + ' object id: ' + o.id);
+                
+                o.innerHTML = i+1;    
+            });
+        }
+        
+    </script>   
+    
+    <apex:pageMessages />
+    
+    <apex:form id="pageForm">
+
+    <apex:sectionHeader title="Web Form Editor"/>
+                        
+    <apex:PageBlock title="Web Form Editor" id="pageBlock">
+
+        <!-- Button Section -->
+        <apex:pageBlockButtons >  
+            <apex:commandButton value="Save" action="{!save}" status="status"/> 
+            <apex:commandButton value="Setup Validation Rules" action="{!saveAndValidation}" status="status"/> 
+            <apex:commandButton value="Setup Conditional Display" action="{!saveAndConditionalDisplay}" status="status"/> 
+            <apex:commandButton value="Clone Form" action="{!deepClone}" status="status"/> 
+            <apex:commandButton value="Cancel" action="{!cancel}" status="status"/>
+            
+        </apex:pageBlockButtons>
+ 
+     <apex:PageBlockSection columns="1">
+        
+          <apex:panelGrid columns="2" cellspacing="10">
+    
+              <c:enhancedLabel label="Display Name:"  tooltip="Displayed at top of form" for="Title" renderIcon="true"/>
+              <apex:inputText value="{!webform.Title__c}" style="width:200px;"/>    
+
+              <c:enhancedLabel label="Form Code:"  tooltip="Used for URL" for="Code" renderIcon="true"/>
+              <apex:inputText value="{!webform.Name}" style="width:100px;"/>  
+
+              <c:enhancedLabel label="Style:" tooltip="Please visit http://ui-enhancements-developer-edition.na7.force.com/ to see what form elements will look like" for="Style" renderIcon="true"/>
+                <apex:selectList value="{!webform.Style__c}" size="1">
+                    <apex:selectOptions value="{!styles}"/>   
+                </apex:selectList>  
+                
+              <c:enhancedLabel label="Forwarding URL:" tooltip="For when form is successfully submitted" for="ReturnURL" renderIcon="true"/>
+              <apex:inputText value="{!webform.Return_URL__c}" style="width:100px;"/>    
+
+              <c:enhancedLabel label="Finished Message:" tooltip="Displays if there is no Forwarding URL set" for="Finished" renderIcon="true"/>    
+              <apex:inputField value="{!webform.Finished_Blurb__c}" />  
+
+                <apex:outputText value="Object Name:" />
+                <apex:panelGroup >
+                    <apex:selectList value="{!selectedObject}" size="1">
+                        <apex:selectOptions value="{!objectSelectOptions}"/>   
+                    </apex:selectList>          
+                    <apex:commandButton action="{!selectobject}" value="Select" rerender="objectSelector, objectfieldsPanel, formfieldsPanel, defaultRecord, dateRangeInit" status="status" oncomplete="fieldsSortable()" />
+                </apex:panelGroup>
+              
+               <c:enhancedLabel label="Default Record:" tooltip="Field values from this record will be used as default values for the form" for="defaultRecord" renderIcon="true"/>    
+               <apex:pageBlockSectionItem >
+                   <apex:selectList value="{!webform.Default_Record__c}" size="1" id="defaultRecord" >
+                        <apex:selectOptions value="{!recordSelectOptions}"/>            
+                    </apex:selectList>          
+               </apex:pageBlockSectionItem>
+                
+        </apex:panelGrid><BR/>
+        
+     </apex:PageBlockSection>
+     <apex:PageBlockSection title="Enhanced Components" columns="2">
+        
+              Use Enhanced Lookup: <c:enhancedCheckbox fieldname="Use_Enhanced_Lookup__c" pageController="{!this}" defaultValue="checked"  />    
+              Use Enhanced Picklist:  <c:enhancedCheckbox fieldname="Use_Enhanced_Picklist__c" pageController="{!this}" defaultValue="checked"  /> 
+              Use Enhanced Multiselect: <c:enhancedCheckbox fieldname="Use_Enhanced_Multiselect__c" pageController="{!this}" defaultValue="checked"  />  
+              Use Enhanced Datepicker: <c:enhancedCheckbox fieldname="Use_Enhanced_Datepicker__c" pageController="{!this}" defaultValue="checked"  />   
+              Use Enhanced Text: <c:enhancedCheckbox fieldname="Use_Enhanced_Text__c" pageController="{!this}" defaultValue="checked"  />   
+              Use Enhanced Textarea: <c:enhancedCheckbox fieldname="Use_Enhanced_Textarea__c" pageController="{!this}" defaultValue="checked"  />   
+                
+     </apex:PageBlockSection>
+
+        <!-- Object Field List -->
+        <apex:PageBlockSection title="Fields {!IF(NOT(ISNULL(selectedObjectLabel)), 'for '+selectedObjectLabel, '')}" columns="2" id="fieldSection">
+        
+            <!-- <apex:panelGrid columns="3" id="fieldsGrid"> -->
+
+            <!--  Object Fields -->
+            <apex:outputPanel id="objectfieldsPanel">
+            
+             <!--  Allow users to add a custom text line or blank spacer -->
+            <br/>
+            <table>
+                <tr>
+                    <td>
+                        <apex:outputLabel value="Add Group Header" />&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <apex:commandLink action="{!addHeader}" rerender="formfieldsPanel, objectfieldsPanel" status="status"  oncomplete="fieldsSortable();">                                                 
+                            <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add"/>
+                        </apex:commandLink>
+                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputLabel value="Add Info Text" />&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <apex:commandLink status="status" action="{!addInfo}" rerender="popup, formfieldsPanel, objectfieldsPanel" onComplete="fieldsSortable();">                                                 
+                            <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add"/>
+                        </apex:commandLink>
+                     </td>
+                </tr>
+            </table>
+            <br/>
+            
+            <h2>Available Fields</h2>
+            <table id="objectfieldheader">
+                <thead class="headerRow">
+                <tr>
+                    <th style="width:150px;">Label</th>
+                    <th style="width:80px;">Type</th>
+                    <th style="width:25px;">Req</th>
+                    <th style="width:30px;">Add</th> 
+                </tr>
+                </thead>
+            </table>
+            <div id="objectfieldlisting" class="connectedSortable">
+                <apex:repeat value="{!objectfields}" var="f" id="objectfieldsRepeat">
+                    
+                    <table id="{!f.Name}" class="formfieldrow" style="width: 300px; cursor:pointer;">
+                        <tr title="{!f.Name}" class="objectfield">  
+                            <td style="width:150px;border-bottom:1px solid #E3DEB8;"><apex:outputField value="{!f.Label__c}"/></td>
+                            <td style="width:95px;border-bottom:1px solid #E3DEB8;"><apex:outputText value="{!f.Type__c}"/></td>                
+                            <td style="width:25px;border-bottom:1px solid #E3DEB8;">
+                                <apex:outputField value="{!f.APIRequired__c}" />
+                            </td>  
+                            <td style="width:30px;border-bottom:1px solid #E3DEB8;">
+                                <apex:inputText value="{!f.Order__c}" id="order" styleclass="order" style="display:none"/>
+                                
+                                 <apex:commandLink action="{!addField}" rerender="formfieldsPanel, objectfieldsPanel, dateRangeInit" status="status" oncomplete="fieldsSortable();">                       
+                                    <apex:param name="fieldname" value="{!f.Name}" assignto="{!fname}"></apex:param>
+                                    <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_add.png')}" title="Add"/>
+                                 </apex:commandLink>
+                             </td>       
+                        </tr>
+                    </table>                    
+                </apex:repeat>
+            </div>
+                                                
+            </apex:outputPanel>
+            
+            <!-- Form Fields -->
+            <apex:outputPanel id="formfieldsPanel" style="margin-top:60px"> 
+            <h2>Form Fields</h2>
+            <table id="formfieldheader">
+                <thead class="headerRow">
+                    <tr>
+                        <th style="width:125px;">Label</th>
+                        <th style="width:80px;">Type</th>
+                        <th style="width:25px;">Req</th>
+                        <th style="width:30px;">Order</th>
+                        <th style="width:30px;">Remove</th> 
+                    </tr>
+                </thead>
+            </table>
+            <div id="formfieldlisting" class="connectedSortable">
+                <apex:repeat value="{!formFields}" var="f" id="formfieldsRepeat">
+                    <table id="{!f.Name}" class="formfieldrow{!IF(f.APIRequired__c == true, ' apirequired', '')}" style="cursor:pointer;">
+                        <tr title="{!f.Name}" class="formfield">    
+                            <td style="width:125px;border-bottom:1px solid #E3DEB8;">
+                                <apex:inputText value="{!f.Label__c}" size="15"/>
+                            </td>
+                            <td style="width:80px;border-bottom:1px solid #E3DEB8;"><apex:outputText value="{!f.Type__c}"/></td>                
+                            <td style="width:25px;border-bottom:1px solid #E3DEB8;">
+                                <apex:inputField value="{!f.Required__c}" rendered="{!NOT(f.APIRequired__c) && f.Type__c != 'Header' && f.Type__c != 'Info' }"/>
+                                <apex:outputField value="{!f.APIRequired__c}" rendered="{!f.APIRequired__c}"/>
+                            </td>
+                            <td style="width:30px;border-bottom:1px solid #E3DEB8;">
+                            <apex:outputText value="{0, number, 0}" id="orderoutput" styleclass="orderoutput">
+                                   <apex:param value="{!f.Order__c}" />
+                             </apex:outputText>
+                             <apex:inputText value="{!f.Order__c}" id="order" styleclass="order" style="display:none"/>
+                            </td>
+                            <td style="width:30px;border-bottom:1px solid #E3DEB8;">
+                              <apex:commandLink action="{!removeField}" rerender="formfieldsPanel, objectfieldsPanel, dateRangeInit" status="status" oncomplete="fieldsSortable();">
+                                <apex:param name="fieldname" value="{!f.Name}" assignTo="{!fname}"></apex:param>
+                                <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/action_delete.png')}" title="Remove"/>
+                             </apex:commandLink>
+                             </td>       
+
+                        </tr>
+                    </table>                    
+                </apex:repeat>
+            </div>
+            </apex:outputPanel>
+
+            <!-- Action Status -->
+            <apex:actionStatus stopText="" id="status"> 
+                <apex:facet name="start">               
+                    <apex:image url="{!URLFOR($Resource.Icons, '/Colored/PNG/time.png')}" title="Wait..."/>                                 
+                </apex:facet>
+            </apex:actionStatus>
+            
+            
+    <script type="text/javascript">
+    
+            $(document).ready(function(){    
+    
+                  $("#popup").dialog({
+                      autoOpen: false,
+                      modal: true,
+                      closeable: false,
+                      resizable: false,
+                      width: 600
+                  });
+                  
+            });
+
+    </script>
+            
+        </apex:PageBlockSection>
+    </apex:PageBlock>
+    
+    <apex:outputPanel id="dateRangeInit">
+
+
+
+        <script type="text/javascript">
+           function dateRangeInit()  
+           {
+                //$('.drp').daterangepicker();
+            
+            <apex:repeat value="{!dateFields}" var="do">
+            
+               $('.dateRange{!do}\\.0').daterangepicker({appendTo: $('#after{!do}\\.0')}); 
+            
+            </apex:repeat>  
+
+
+           }
+        
+        </script>
+    
+    </apex:outputPanel>  
+
+    </apex:form>  
+    
+           <div id="popup" style="display:none" >
+                <apex:form >
+            
+                   Info Text:
+                   
+                       <apex:inputTextArea richText="true" value="{!ff.Info__c}" />
+        
+                       <apex:commandButton value="Add" action="{!addInfo}" rerender="popup, formfieldsPanel, objectfieldsPanel" onComplete="$('#popup').dialog('close');fieldsSortable();"/>
+                </apex:form>
+           </div>
+
+</apex:page>

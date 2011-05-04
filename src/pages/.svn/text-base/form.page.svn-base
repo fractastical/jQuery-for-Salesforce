@@ -1,0 +1,15 @@
+<apex:page controller="FormDisplayController" showheader="false">
+        
+        <style type="text/css">
+         
+            #container { position: relative; width: 100%; margin:15px 15px; }
+            
+        </style>
+
+         <div id="container">
+                                      
+             <c:Form formname="{!formname}" pageController="{!this}" /> 
+              
+         </div>
+
+</apex:page>

@@ -1,0 +1,43 @@
+<apex:component controller="EnhancedTextController" allowDML="true" access="global" >
+    
+      <apex:attribute name="pageController" 
+          type="PageControllerBase" 
+          assignTo="{!pageController}" 
+          required="true" 
+          access="global"  
+          description="The controller for the page." />
+          
+    <apex:attribute name="object" access="global" description="This is the object" type="SObject" required="false" assignTo="{!myObject}" />
+    <apex:attribute name="fieldName" access="global" description="This is the field name" type="String" required="true" assignTo="{!fieldName}" />
+    <apex:attribute name="validateAs" access="global" description="This is the type of validation that will be applied" type="String" required="false" assignTo="{!validateAs}" />
+    <apex:attribute name="required" access="global" description="Is this field required?" type="Boolean" required="false" assignTo="{!required}" />
+    <apex:attribute name="hidden" access="global" description="Is this text hidden?" type="Boolean" required="false" assignTo="{!hidden}" />
+    <apex:attribute name="maxLength" access="global" description="Max length of field" type="String" required="false" assignTo="{!maxLength}" />
+    <apex:attribute name="minLength" access="global" description="Minimum length of field" type="String" required="false" assignTo="{!minLength}" />
+    <apex:attribute name="defaultValue" access="global" description="default value for field, will display and override other values" type="String" required="false" assignTo="{!defaultValue}" />
+    <apex:attribute name="downgrade" access="global" description="Should enhanced features be disabled?" required="false" type="Boolean" assignTo="{!downgrade}" />
+    <apex:attribute name="requiresVerification" access="global" description="Should a second field verifying the first be displayed?" required="false" type="Boolean" assignTo="{!requiresVerification}" />
+    <apex:attribute name="maskedInput" access="global" description="Should fields be displayed with masked input?" required="false" type="Boolean" assignTo="{!maskedInput}" />
+
+
+    {!onLoad}
+      
+    <apex:outputPanel rendered="{!downgrade != true}">
+
+            <apex:outputPanel rendered="{!maskedInput}">   
+            
+                <script type="text/javascript" src="{!$Resource.JQMaskedInput122}" />
+        
+            </apex:outputPanel>
+
+       <apex:inputText styleClass="{!uid} T{!fieldName} formelement" value="{!myValueHolder}" />
+       
+     </apex:outputPanel> 
+     <apex:outputPanel rendered="{!downgrade == true}">
+     
+           <apex:inputText styleClass="{!uid} T{!fieldName} formelement" value="{!myValueHolder}" />
+        
+     </apex:outputPanel>
+     
+       
+</apex:component>

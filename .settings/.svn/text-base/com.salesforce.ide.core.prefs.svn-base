@@ -1,0 +1,13 @@
+#Wed Jul 14 09:36:10 EDT 2010
+eclipse.preferences.version=1
+endpointApiVersion=18.0
+endpointEnvironment=Production/Developer Edition
+endpointServer=www.salesforce.com
+httpsProtocol=true
+ideVersion=18.0
+keependpoint=false
+metadataFormatVersion=18.0
+namespacePrefix=
+packageName=unpackaged
+readTimeout=400
+username=formationdeploy@titaniainc.com

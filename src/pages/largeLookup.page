@@ -1,0 +1,4 @@
+<apex:page controller="EnhancedLookupController"  action="{!doSearch}"
+	contentType="application/x-JavaScript; charset=utf-8" showHeader="false" cache="false" standardStylesheets="false" sidebar="false">
+	{!result}
+	</apex:page>

@@ -1,0 +1,14 @@
+<apex:component controller="FormFieldController">  
+
+      <apex:attribute name="pageController" 
+          type="PageControllerBase" 
+          assignTo="{!pageController}"   
+          required="true" 
+          description="The controller for the page." />
+
+    <apex:attribute name="field" description="This is the field that this component wil render" type="Form_Field__c" required="true" assignTo="{!field}"/>
+    
+    <!-- Input fields for the different possible field types, non-hidden -->
+    <c:enhancedText fieldName="{!field.name}" rendered="{!field.Type__c == 'Text'}" pageController="{!pageController}"  />
+
+</apex:component>

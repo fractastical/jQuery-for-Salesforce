@@ -1,0 +1,43 @@
+<apex:component controller="EnhancedLookupController" allowDML="true" access="global">
+
+    <apex:attribute name="pageController" 
+          type="PageControllerBase" 
+          assignTo="{!pageController}" 
+          required="true" 
+          access="global"
+          description="The controller for the page." />
+    <apex:attribute name="object" access="global" description="This is the object" type="SObject" required="false" assignTo="{!myObject}" />
+    <apex:attribute name="fieldName" access="global" description="This is the field name" type="String" required="true" assignTo="{!fieldName}" />
+    <apex:attribute name="displayColumn" access="global" description="column to displayed from the object looked up (defaults to name)" type="String" required="false" assignTo="{!displayColumn}" />
+    <apex:attribute name="objectToLookup" access="global" description="name of object to find" type="String" required="true" assignTo="{!objectToLookup}" />
+    <apex:attribute name="filter" access="global" description="Filter in SOQL format (starting with WHERE) to restrict values" type="String" required="false" assignTo="{!filterString}" />
+    <apex:attribute name="required" access="global" description="Is this field required?" type="Boolean" required="false" assignTo="{!required}" />
+    <apex:attribute name="hidden" access="global" description="Is this text hidden?" type="Boolean" required="false" assignTo="{!hidden}" />
+    <apex:attribute name="defaultValue" access="global" description="default value for field, will display and override other values" type="String" required="false" assignTo="{!defaultValue}" />
+	<apex:attribute name="downgrade" access="global" description="Should enhanced features be disabled?" required="false" type="Boolean" assignTo="{!downgrade}" />
+	<apex:attribute name="bigSet" access="global" description="Are there a large number of records requiring a dynamic lookup?" required="false" type="Boolean" assignTo="{!bigset}" />
+
+	<apex:outputPanel rendered="{!bigset != true}">
+
+	    <script type="text/javascript" src="{!URLFOR($Resource.JQAutocomplete11,'jquery-autocomplete/jquery.autocomplete.pack.js')}"></script>
+	    <apex:stylesheet value="{!URLFOR($Resource.JQAutocomplete11,'jquery-autocomplete/jquery.autocomplete.css')}"/>      
+
+	</apex:outputPanel>    
+	
+    {!onLoad}
+
+	<apex:outputPanel rendered="{!downgrade != true}">
+
+	    <apex:inputText styleClass="L{!uid}" value="{!displayName}" />
+	    <span class="S{!uid}"><apex:inputText style="display:none" styleClass="{!uid}" value="{!myValueHolder}" /></span>
+           
+		   
+	 </apex:outputPanel> 	 
+	 <apex:outputPanel rendered="{!downgrade == true}">
+
+		Only the enhanced Lookup is supported at this time.
+
+ 	</apex:outputPanel>   
+
+
+</apex:component>

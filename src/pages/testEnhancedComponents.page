@@ -1,0 +1,244 @@
+<apex:page standardController="TestObject__c" extensions="UIDemoController" cache="false" showHeader="false" action="{!insertDummyLookupRecords}" >
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"/>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.6/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.6/additional-methods.js"></script>
+    <script type="text/javascript" src="{!$Resource.JQAdditionalValidationForSalesforce}"></script>
+    <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+
+    <apex:stylesheet value="{!URLFOR($Resource.JQueryUICup,'development-bundle/themes/cupertino/jquery.ui.all.css')}"/>
+
+<style type="text/css">
+ 
+ #container
+{
+    width: 95%;
+    margin: 10px auto;
+}
+
+ #header
+{
+    padding: 2px;
+    background-color: #ddd;
+    border-bottom: 1px solid gray;
+    height: 60px;
+} 
+ #leftbar
+{
+    float: left;
+    width: 360px;
+    margin: 0;
+    padding: 1em;
+}
+
+#middlebar
+{
+    float: left;
+    border-left: 1px solid gray;
+    padding: 1em;
+    margin-left:10px;
+
+}
+
+.enhanced td.label
+{
+    padding-top:3px;
+    padding-bottom:3px;
+    width:115px;
+
+}
+.enhanced td.value
+{
+    padding-top:4px;
+    padding-bottom:4px;
+
+}
+
+.required, .message {    
+    color: red;       
+}    
+  
+* { font-family: Verdana; font-size: 96%; }
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+
+</style>
+
+
+
+<div id="container" >
+    <div id="header">
+        <div style="float:right"><apex:image value="{!$Resource.ThemeRollerReadyWhite200}"/></div>
+        <p><BR/><apex:outputText value="Object Name: {!TestObject__c.name}" /></p>
+        <!--  <p><a onclick="$('#container').slideUp('slow');$('#adminPanel').slideDown('slow');">Admin Panel</a>&nbsp;</p> -->
+        <p><apex:pageMessages id="msgs"/> </p>
+         
+    </div>
+      
+    
+    <div id="leftbar">
+    
+        <apex:form >
+             <apex:pageBlock title="Standard Elements" >                      
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!save}" value="Save"/>
+                </apex:pageBlockButtons>
+                
+                <apex:pageBlockSection title="Fields" columns="1" >
+                    <apex:inputField value="{!TestObject__c.Name}" />
+                    <apex:inputField value="{!TestObject__c.Checkbox__c}" />
+                    <apex:inputField value="{!TestObject__c.Currency__c}" />
+                    <apex:inputField value="{!TestObject__c.Date__c}" />
+                 <!--    <apex:inputField value="{!TestObject__c.Datetime__c}" /  -->
+                    <apex:inputField value="{!TestObject__c.Email__c}" />
+                    <apex:inputField value="{!TestObject__c.Number__c}" />
+                    <apex:inputField value="{!TestObject__c.Percent__c}" />
+                    <apex:inputField value="{!TestObject__c.Phone__c}" />
+                    <apex:inputField value="{!TestObject__c.Picklist__c}" />
+                    <apex:inputField value="{!TestObject__c.Picklist_Multi_Select__c}" />
+                    <apex:inputField value="{!TestObject__c.Test_Lookup_Object__c}" />
+                    <apex:inputField value="{!TestObject__c.Text__c}" />
+                    <apex:inputField value="{!TestObject__c.Text_Area__c}" />
+                 <!--    <apex:inputField value="{!TestObject__c.Text_Area_Long__c}" /> -->
+                    <!-- rich text area gives internal server error -->
+                </apex:pageBlockSection>
+                
+             </apex:pageBlock>                      
+
+        </apex:form>
+
+    </div> <!-- end left bar -->
+
+    <div id="middlebar">
+        
+        <apex:form styleClass="myForm" >   
+        
+            <table class="enhanced">
+                  <tr>
+                      <td colspan="2">       
+                              <div class="ui-widget ui-helper-reset"> 
+                                       <p class="ui-helper-reset ui-state-default ui-corner-all" align="center">
+                                         Enhanced Elements
+                                       </p>
+                                </div>
+                        </td>
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Name" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Name" object="{!TestObject__c}" validateAs="name" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Checkbox" /></td>               
+                      <td class="value"><c:enhancedCheckbox pageController="{!this}" fieldName="Checkbox__c"   /></td>    
+                  </tr>   
+
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Currency" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Currency__c"  validateAs="currency"  /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Date" /></td>             
+                      <td class="value"><c:enhancedDatepicker pageController="{!this}" fieldName="Date__c" /></td>    
+                  </tr>   
+              <!--    <tr>
+                      <td><apex:outputLabel value="Datetime" /></td>             
+                      <td></td>    
+                  </tr>   -->
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Email" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Email__c" validateAs="email" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Number" /></td>               
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Number__c" validateAs="number" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Percent" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Percent__c" validateAs="percent" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><c:enhancedLabel for="Phone" label="Phone" tooltip="Your phonenumber" renderIcon="true" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Phone__c" validateAs="phoneus" maskedInput="true" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Picklist" /></td>             
+                      <td class="value"><c:enhancedSelect fieldName="Picklist__c" pageController="{!this}" object="{!TestObject__c}" /></td>    
+                  </tr>   
+                   <tr>  
+                      <td class="label"><apex:outputLabel value="Multi Select Picklist" /></td>             
+                      <td class="value"><c:enhancedMultiselect pageController="{!this}" fieldName="Picklist_Multi_Select__c" object="{!TestObject__c}"  /></td>    
+                  </tr>
+              <!--   <tr>
+                      <td class="label"><apex:outputLabel value="Lookup" /></td>             
+                      <td class="value"><c:enhancedLookup pageController="{!this}" fieldName="Test_Lookup_Object__c" objectToLookup="TestLookupObject__c" /></td>    
+                  </tr> -->   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Large Lookup" /></td>             
+                      <td class="value"><c:enhancedLookup pageController="{!this}" fieldName="Test_Lookup_Object__c" objectToLookup="TestLookupObject__c" bigset="true" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Text" /></td>             
+                      <td class="value"><c:enhancedText pageController="{!this}" fieldName="Text__c" /></td>    
+                  </tr>   
+                  <tr>
+                      <td class="label"><apex:outputLabel value="Text Area" /></td>             
+                      <td class="value"><c:enhancedTextarea pageController="{!this}" fieldName="Text_Area__c" expandable="true" width="145" height="50" /></td>        
+                  </tr>     
+                <!-- <tr>
+                      <td><apex:outputLabel value="Text Area Long" /></td>             
+                      <td><c:enhancedText pageController="{!this}" fieldName="Text_Area_Long__c" object="{!TestObject__c}"  /></td>    
+                  </tr>   -->
+                  <tr>
+                      <td class="label" colspan="2" align="center"><apex:commandLink styleClass="button" action="{!ecSave}" onComplete="$('#MSPicklist_Multi_Select__c').multiPicklist();">Save</apex:commandLink></td>
+                  </tr>
+                  <tr>
+                      <td class="label" colspan="2" align="center"><BR/></td>
+                  </tr>
+                  <tr>
+                      <td class="label" colspan="2" align="center"><div id="switcher"></div></td>
+                  </tr>
+                  <tr>
+                      <td class="label" colspan="2" align="center"></td>
+                  </tr>   
+
+           </table>  
+        </apex:form>
+        
+
+  </div> <!-- end middle bar -->
+
+
+ </div>  <!-- end container -->
+
+
+
+
+    <script type="text/javascript">
+    
+        
+        $(document).ready(function() {
+        
+            $('.myForm').validate({
+                
+                     submitHandler: function(form) {
+                       superSave();
+                     }
+                });
+
+            
+             $('#switcher').themeswitcher();
+             $(".button").button();
+
+         });
+      
+    </script>
+
+     <apex:outputText escape="false" value="{!javascript}" />
+
+    <apex:form >
+        <apex:actionFunction name="superSave" action="{!ecSave}" />
+    </apex:form>
+
+    
+
+</apex:page>

@@ -1,0 +1,86 @@
+10
+
+dir
+14
+http://sfdcjqueryenhancements.googlecode.com/svn/trunk/src
+http://sfdcjqueryenhancements.googlecode.com/svn
+
+
+
+2010-12-16T16:20:03.360862Z
+14
+jdietz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6b5eb1aa-a856-388b-2974-6e2023f29578
+
+pages
+dir
+
+staticresources
+dir
+
+components
+dir
+
+triggers
+dir
+
+applications
+dir
+
+tabs
+dir
+
+objects
+dir
+
+package.xml
+file
+
+
+
+
+2011-05-04T00:21:06.000000Z
+2cd4557f4cb0ede4c4cc096be243c7af
+2010-12-16T16:20:03.360862Z
+14
+jdietz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+246
+
+classes
+dir
+

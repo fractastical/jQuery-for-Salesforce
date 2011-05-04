@@ -1,0 +1,17 @@
+<apex:component controller="EnhancedLabelController" allowDML="true" access="global">
+
+    <apex:attribute name="label" description="This is the label" access="global" type="String" required="true" assignTo="{!label}" />
+    <apex:attribute name="for" description="Field name that this tooltip is for" access="global" type="String" required="false" assignTo="{!forField}" />
+    <apex:attribute name="tooltip" description="This is the tooltip" access="global" type="String" required="false" assignTo="{!tooltip}" />
+    <apex:attribute name="renderIcon" description="Render tooltip icon?" access="global" type="Boolean" required="false" assignTo="{!renderIcon}" />
+
+    <script type="text/javascript" src="{!URLFOR($Resource.JQTooltip13,'jquery-tooltip/jquery.tooltip.min.js')}"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.JQTooltip13,'jquery-tooltip/jquery.tooltip.css')}"/>      
+
+	<span id="La{!forField}" title="{!tooltip}">{!label}&nbsp;<apex:image value="{!URLFOR($Resource.FamFamIconsMini,'icon_info.gif')}" rendered="{!renderIcon == true}" width="13" height="13" /></span>
+	   
+  
+    <apex:outputText escape="false" value="{!onLoad}" />  
+        
+
+</apex:component>
