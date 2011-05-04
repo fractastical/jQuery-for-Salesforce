@@ -1,0 +1,31 @@
+h2. Implementation of many jQuery UI components and other features for Salesforce
+
+This also uses and implements the jQuery Validate function on a form in order to have life in browser validation.
+
+Each component includes data-binding so that you can write to Salesforce objects as with any normal Visualforce component. Style is fully customizable with the jQuery themeroller.
+
+Currently includes:
+
+* Autocomplete
+* Text
+* Long Text
+* Datepicker (use instead of apex:datepicker)
+* Multiselect
+* Picklist
+* Checkbox
+
+Custom validation is currently included for a number of types including:
+* US Phone
+* International Phone
+* Credit card
+* Email
+* Dates
+
+Also implemented are custom labels.
+
+Not yet implemented
+* Rich Text
+
+
+You can see how the jQuery UI enhanced components compare with standard Visualforce components "here":http://ui-enhancements-developer-edition.na7.force.com/testEnhancedComponents
+
